@@ -1,4 +1,4 @@
-package com.nivekpersonal.sampleApp
+package com.ramesesdevapps.etracswater
 
 import android.app.Application
 import android.content.res.Configuration

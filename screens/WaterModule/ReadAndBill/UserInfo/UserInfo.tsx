@@ -23,6 +23,7 @@ import { currencyFormat } from '../../Others/formatCurrency';
 
 import ensureFourDecimalPlaces from '../../Others/ensureFourDecimalPlaces';
 import Service from "../../../../common/lib/server/remote-service.js";
+import DeviceInfo from 'react-native-device-info';
 
 const { height } = Dimensions.get('window');
 const db = SQLITE.openDatabase('example.db');
@@ -98,6 +99,8 @@ const UserInfo = ({ navigation, route }) => {
     })
     const printRef = useRef(null)
 
+    const [uniqueId, setUniqueId] = useState('');
+
     // const hdb = SQLITE.openDatabase('headers.db');
 
     const date = new Date();
@@ -127,6 +130,19 @@ const UserInfo = ({ navigation, route }) => {
             console.error('Error retrieving object:', error);
         }
     };
+
+    useEffect(() => {
+        const getDeviceUniqueId = async () => {
+            try {
+                const id = await DeviceInfo.getUniqueId();
+                id && setUniqueId(id)
+            } catch (e) {
+                alert(e)
+            }
+        }
+
+        getDeviceUniqueId();
+    }, [])
 
     useEffect(() => {
         const dlPicture = async () => {
@@ -273,7 +289,8 @@ const UserInfo = ({ navigation, route }) => {
                     acctno: user.acctno,
                     prevreading: user.prevreading,
                     reading: user.reading,
-                    volume: user.volume
+                    volume: user.volume,
+                    deviceUniqueId: uniqueId
                 }
 
                 async function invokeWithTimeout(promise, timeout) {
@@ -557,7 +574,8 @@ const UserInfo = ({ navigation, route }) => {
                 hold: user.note ? {
                     message: user.note,
                     date: user.noteDate
-                } : null
+                } : null,
+                deviceUniqueId: uniqueId
             }
             const data = await svc.invoke("uploadReading", upload_param);
 
@@ -569,7 +587,7 @@ const UserInfo = ({ navigation, route }) => {
                     tx => {
                         tx.executeSql(
                             `UPDATE ${batchname} SET uploaded = ?, receiver = ?, rate = ?, duedate = ?, receiveDate = ?, qrcode = ?, disconnectiondate = ?, balance = ? WHERE acctno = ?`,
-                            [1, receiver, computedRef.current.rate, computedRef.current.duedate, currentDate, computedRef.current.qrcode, computedRef.current.disconnectiondate ? computedRef.current.disconnectiondate : '', computedRef.current.balance ?  computedRef.current.balance : 0, user.acctno,],
+                            [1, receiver, computedRef.current.rate, computedRef.current.duedate, currentDate, computedRef.current.qrcode, computedRef.current.disconnectiondate ? computedRef.current.disconnectiondate : '', computedRef.current.balance ? computedRef.current.balance : 0, user.acctno,],
                             (txObj, resultSet) => {
                                 console.log('Updated uploaded');
                                 setSigOpen(false)
@@ -605,14 +623,14 @@ const UserInfo = ({ navigation, route }) => {
     //         console.log(err.message);
     //     }
     // };
-    
+
     const printReceipt = async () => {
         // console.log(`userBal: ${user.balance}`)
         try {
 
             // console.log(`userBal: ${user.balance}, compBal: ${computedRef.current.balance}`)
             await ThermalPrinterModule.printBluetooth({
-                payload: printFormat(user, headers, imageUrl, "", user.receiver ? user.receiver : receiver, user.rate > 0 ? user.rate : computedRef.current.rate, user.qrcode ? user.qrcode : computedRef.current.qrcode, user.disconnectiondate || '', user.balance !== null &&  user.balance !== 0 ?  user.balance : computedRef.current.balance),
+                payload: printFormat(user, headers, imageUrl, "", user.receiver ? user.receiver : receiver, user.rate > 0 ? user.rate : computedRef.current.rate, user.qrcode ? user.qrcode : computedRef.current.qrcode, user.disconnectiondate || '', user.balance !== null && user.balance !== 0 ? user.balance : computedRef.current.balance),
                 printerWidthMM: 48,
                 printerNbrCharactersPerLine: 32
             })
@@ -915,8 +933,8 @@ const UserInfo = ({ navigation, route }) => {
                                         </View>
                                         <View style={{ flex: 1 }}></View>
                                         <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
-                                            <Text style={{fontWeight: 'bold'}}>Total</Text>
-                                            <Text style={{fontWeight: 'bold'}}>{computedRef.current.total ? currencyFormat({ val: computedRef.current.total, decimal: 2 }) : ""}</Text>
+                                            <Text style={{ fontWeight: 'bold' }}>Total</Text>
+                                            <Text style={{ fontWeight: 'bold' }}>{computedRef.current.total ? currencyFormat({ val: computedRef.current.total, decimal: 2 }) : ""}</Text>
                                         </View>
                                     </View>
                                     <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>

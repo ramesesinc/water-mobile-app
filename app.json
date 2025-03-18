@@ -22,17 +22,17 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.nivekpersonal.sampleApp",
-      "versionCode": 1
+      "versionCode": 1.01,
+      "package": "com.ramesesdevapps.etracswater"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "owner": "ramesesdevapps",
     "extra": {
       "eas": {
-        "projectId": "193c28f4-633e-4cb0-9126-87eb29736ad1"
+        "projectId": "b93ddfb7-4c05-4041-b91b-7aab31983c6e"
       }
-    },
-    "owner": "nivekcryptos"
+    }
   }
 }

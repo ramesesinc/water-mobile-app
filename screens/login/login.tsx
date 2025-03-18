@@ -11,6 +11,7 @@ import Fontisto from '@expo/vector-icons/Fontisto';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import CryptoJS from 'crypto-js';
 import { useIsFocused } from '@react-navigation/native';
+import DeviceInfo from 'react-native-device-info';
 
 const etracslogo = require('../../assets/etracsLogo.png')
 
@@ -27,6 +28,8 @@ export default function Login({ navigation }) {
 
     const [etracsIP, setEtracsIP] = useState("")
     const [etracsPort, setEtracsPort] = useState("")
+
+    const [uniqueId, setUniqueId] = useState('');
 
     const handleUserChange = (inputText) => {
         setUserName(inputText)
@@ -76,6 +79,19 @@ export default function Login({ navigation }) {
         }
     }, [isFocused])
 
+    useEffect(() => {
+        const getDeviceUniqueId = async () => {
+            try {
+                const id = await DeviceInfo.getUniqueId();
+                id && setUniqueId(id)
+            } catch (e) {
+                alert(e)
+            }
+        }
+
+        getDeviceUniqueId();
+    }, [])
+
     function generateHmacMD5(seed: string, v: string) {
         const hmac = CryptoJS.HmacMD5(v, seed);
         return hmac.toString();
@@ -112,6 +128,7 @@ export default function Login({ navigation }) {
                     args: {
                         username: username,
                         password: hash,
+                        deviceUniqueId: uniqueId
                     },
                 }),
                 signal: controller.signal,
@@ -209,7 +226,7 @@ export default function Login({ navigation }) {
                 </View>
                 <TouchableOpacity onPress={() => {
                     setCheckBox(!checkbox)
-                    }} style={{ width: 250, flexDirection: 'row', gap: 5, alignItems: 'center', marginTop: 10, marginLeft: 3 }}>
+                }} style={{ width: 250, flexDirection: 'row', gap: 5, alignItems: 'center', marginTop: 10, marginLeft: 3 }}>
                     {!checkbox ?
                         <Fontisto name="checkbox-passive" size={15} color="grey" />
                         :

@@ -6,6 +6,7 @@ import * as SQLITE from 'expo-sqlite'
 import { styles } from './styles'
 import WaterHeader from '../../../components/Water/WaterHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DeviceInfo from 'react-native-device-info';
 
 const UploadBatch = ({ navigation }) => {
   const [uploading, setUploading] = useState(false)
@@ -17,6 +18,8 @@ const UploadBatch = ({ navigation }) => {
   const [toUpload, setToUpload] = useState("")
 
   const [serverObj, setServerObj] = useState(null)
+
+  const [uniqueId, setUniqueId] = useState('');
 
   const db = SQLITE.openDatabase('example.db');
   useEffect(() => {
@@ -32,6 +35,19 @@ const UploadBatch = ({ navigation }) => {
     }
 
     getIp();
+  }, [])
+
+  useEffect(() => {
+    const getDeviceUniqueId = async () => {
+      try {
+        const id = await DeviceInfo.getUniqueId();
+        id && setUniqueId(id)
+      } catch (e) {
+        alert(e)
+      }
+    }
+
+    getDeviceUniqueId();
   }, [])
 
   const upLoadBatchNow = (batch, index) => {

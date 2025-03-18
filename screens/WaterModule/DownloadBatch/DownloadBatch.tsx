@@ -11,6 +11,7 @@ import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { removeDownloaded } from '../Others/removeDownloaded';
+import DeviceInfo from 'react-native-device-info';
 
 const DownloadBatch = ({ navigation }) => {
   const [downloading, setDownloading] = useState(false)
@@ -28,6 +29,8 @@ const DownloadBatch = ({ navigation }) => {
 
   const [readerObj, setReaderObj] = useState(null)
   const [serverObj, setServerObj] = useState(null)
+
+  const [uniqueId, setUniqueId] = useState('');
 
   const maxNum = useRef(0)
 
@@ -80,6 +83,19 @@ const DownloadBatch = ({ navigation }) => {
 
   useEffect(() => {
     getBatch();
+  }, [])
+
+  useEffect(() => {
+    const getDeviceUniqueId = async () => {
+      try {
+        const id = await DeviceInfo.getUniqueId();
+        id && setUniqueId(id)
+      } catch (e) {
+        alert(e)
+      }
+    }
+
+    getDeviceUniqueId();
   }, [])
 
   useEffect(() => {
@@ -160,7 +176,8 @@ const DownloadBatch = ({ navigation }) => {
             args: {
               batchid: selectedBatch,
               start: currentStart.current,
-              limit: selected + 1
+              limit: selected + 1,
+              deviceUniqueId: uniqueId
             },
           }),
         });
@@ -220,9 +237,9 @@ const DownloadBatch = ({ navigation }) => {
                 console.log('table not created', error);
                 return false
               }
-          );
+            );
           }, (err) => {
-            console.log("error",err)
+            console.log("error", err)
           });
 
           const newData = await dataRes.map((e: any, i: any) => ({
@@ -255,7 +272,7 @@ const DownloadBatch = ({ navigation }) => {
             } else {
               db.transaction(tx => {
                 tx.executeSql(`INSERT OR IGNORE INTO ${batchTable} (batchid, acctno, prevreading, reading, volume, rate, acctname, capacity, brand, meterno, billdate, duedate, discdate, amount, classification, penalty, discount, acctgroup, fromdate, todate, location, reader, balance, note, uploaded, sigData, receiver, receiveDate, noteDate, qrcode, othercharge, disconnectiondate) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
-                  [data[i].batchid, data[i].acctno, data[i].prevreading ? data[i].prevreading: 0, data[i].reading, data[i].volume, data[i].rate, data[i].acctname, data[i].meter.capacity, data[i].meter.brand, data[i].meter.serialno, data[i].billdate, data[i].duedate, data[i].discdate, data[i].amount, data[i].classificationid, data[i].penalty, data[i].discount, data[i].acctgroup, data[i].fromdate, data[i].todate, data[i].location.text, data[i].reader.name, 0, data[i].note, 0, "", "", "", "", "",data[i].othercharge ? data[i].othercharge: 0, data[i].disconnectiondate ? data[i].disconnectiondate: ""], (_, result) => {
+                  [data[i].batchid, data[i].acctno, data[i].prevreading ? data[i].prevreading : 0, data[i].reading, data[i].volume, data[i].rate, data[i].acctname, data[i].meter.capacity, data[i].meter.brand, data[i].meter.serialno, data[i].billdate, data[i].duedate, data[i].discdate, data[i].amount, data[i].classificationid, data[i].penalty, data[i].discount, data[i].acctgroup, data[i].fromdate, data[i].todate, data[i].location.text, data[i].reader.name, 0, data[i].note, 0, "", "", "", "", "", data[i].othercharge ? data[i].othercharge : 0, data[i].disconnectiondate ? data[i].disconnectiondate : ""], (_, result) => {
                     console.log('Insert result:', result);
                   },
                   (_, error) => {
@@ -358,12 +375,12 @@ const DownloadBatch = ({ navigation }) => {
                   <Text>{curr} Records Downloaded</Text>
                   <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', gap: 5, borderRadius: 5, borderWidth: 1, paddingHorizontal: 5, borderColor: 'rgba(0, 0, 0, 0.1)' }}
                     onPress={() => {
-                        setPreDownloading(false)
-                        setSelectedBatch('')
-                        setError('')
-                        setDownloaded(false);
-                        setDownloading(false)
-                        navigation.navigate('Batch Info', { batchname: currentBatch.current })
+                      setPreDownloading(false)
+                      setSelectedBatch('')
+                      setError('')
+                      setDownloaded(false);
+                      setDownloading(false)
+                      navigation.navigate('Batch Info', { batchname: currentBatch.current })
                     }}>
                     <Text>View</Text>
                     <MaterialIcons name="pageview" size={24} color="#00669B" />

@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
 
 import CryptoJS from 'crypto-js';
+import DeviceInfo from 'react-native-device-info';
 
 const db = SQLITE.openDatabase('example.db');
 
@@ -29,7 +30,22 @@ const ReadAndBill = ({ navigation }) => {
   const [etracsIP, setEtracsIP] = useState("")
   const [etracsPort, setEtracsPort] = useState("")
 
+  const [uniqueId, setUniqueId] = useState('');
+
   const controller = new AbortController();
+
+  useEffect(() => {
+    const getDeviceUniqueId = async () => {
+      try {
+        const id = await DeviceInfo.getUniqueId();
+        id && setUniqueId(id)
+      } catch (e) {
+        alert(e)
+      }
+    }
+
+    getDeviceUniqueId();
+  }, [])
 
   useEffect(() => {
     const getServerAdd = async () => {
@@ -84,6 +100,7 @@ const ReadAndBill = ({ navigation }) => {
           args: {
             username: "sa",
             password: hash,
+            deviceUniqueId: uniqueId
           },
         }),
         signal: controller.signal,
