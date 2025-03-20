@@ -1,7 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Platform, StatusBar, View, Text, TextInput, TouchableOpacity, ActivityIndicator } from "react-native";
+import { Platform, StatusBar, View, Text, TextInput, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView } from "react-native";
 import React, { useEffect, useState, useRef } from 'react'
+import { Alert, Linking } from "react-native";
+
+import Constants from "expo-constants";
 
 import Login from "./screens/login/login";
 import WaterModuleTab from "./navigation/Water/WaterModuleTab";
@@ -13,7 +16,10 @@ import DeviceInfo from "react-native-device-info";
 import verifyKey from "./others/DeviceInfoUtil-version2";
 import encode from "./others/encoder";
 
+const currentVersion = Constants.expoConfig.version
 const Stack = createStackNavigator();
+
+const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=com.ramesesdevapps.etracswater";
 
 export default function App() {
 
@@ -24,6 +30,8 @@ export default function App() {
   const [registrationKey, setRegistrationKey] = useState("")
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
+
+  const [versionCheckTrigger, setVersionCheckTrigger] = useState(0);
 
   useEffect(() => {
     const checkDeviceIfRegistered = async () => {
@@ -47,9 +55,36 @@ export default function App() {
         console.log("loading to false")
       }
     }
-    
+
     checkDeviceIfRegistered();
   }, []);
+
+  useEffect(() => {
+    const versionCheck = async () => {
+      try {
+        const response = await fetch('https://etracswaterversion.vercel.app');
+
+        const data = await response.json();
+
+        if (data.latestVersion && data.latestVersion !== currentVersion) {
+          Alert.alert(
+            "Update Available",
+            `A new version of this app is available "Version ${data.latestVersion}". Please update to continue.`,
+            [{
+              text: "Update", onPress: () => {
+                Linking.openURL(PLAY_STORE_URL);
+                setTimeout(() => setVersionCheckTrigger(prev => prev + 1), 500)
+              }
+            }]
+          );
+        }
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    versionCheck()
+  }, [versionCheckTrigger])
 
   const handleRegister = async () => {
     try {
@@ -112,6 +147,9 @@ export default function App() {
             </View>
           }
         </View>
+        <KeyboardAvoidingView behavior="height" style={{ height: 50 }}>
+          <Text style={{ color: 'black', textAlign: 'center', alignSelf: 'center', flex: 1 }}>Version {currentVersion}</Text>
+        </KeyboardAvoidingView>
       </View>
     )
   }
