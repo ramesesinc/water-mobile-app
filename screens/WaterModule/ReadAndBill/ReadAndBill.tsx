@@ -15,6 +15,10 @@ import { useIsFocused } from '@react-navigation/native';
 import CryptoJS from 'crypto-js';
 import DeviceInfo from 'react-native-device-info';
 
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
+
 const db = SQLITE.openDatabase('example.db');
 
 const ReadAndBill = ({ navigation }) => {
@@ -30,21 +34,32 @@ const ReadAndBill = ({ navigation }) => {
   const [etracsIP, setEtracsIP] = useState("")
   const [etracsPort, setEtracsPort] = useState("")
 
+  const [readerObj, setReaderObj] = useState(null)
   const [uniqueId, setUniqueId] = useState('');
+  const [registeredKey, setRegisteredKey] = useState('');
 
   const controller = new AbortController();
 
   useEffect(() => {
-    const getDeviceUniqueId = async () => {
+    const getEnvObj = async () => {
       try {
+        const readerInfo = await AsyncStorage.getItem('readerInfo');
+        const storedObject = await JSON.parse(readerInfo);
+
+        setReaderObj(storedObject)
+
         const id = await DeviceInfo.getUniqueId();
         id && setUniqueId(id)
+        const regkey = await AsyncStorage.getItem('registeredKey');
+        regkey && setRegisteredKey(registeredKey)
+
       } catch (e) {
         alert(e)
       }
     }
 
-    getDeviceUniqueId();
+    getEnvObj();
+
   }, [])
 
   useEffect(() => {
@@ -96,6 +111,11 @@ const ReadAndBill = ({ navigation }) => {
         body: JSON.stringify({
           env: {
             CLIENTTYPE: 'mobile',
+            USERID: readerObj.USERID,
+            SESSIONID: readerObj.SESSIONID,
+            DEVICEID: uniqueId,
+            REGKEY: registeredKey,
+            APPVERSION: currentVersion
           },
           args: {
             username: "sa",

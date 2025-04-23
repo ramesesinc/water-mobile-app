@@ -31,7 +31,7 @@ export default function App() {
   const [error, setError] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  const [versionCheckTrigger, setVersionCheckTrigger] = useState(0);
+  // const [versionCheckTrigger, setVersionCheckTrigger] = useState(0);
 
   useEffect(() => {
     const checkDeviceIfRegistered = async () => {
@@ -67,16 +67,15 @@ export default function App() {
         const data = await response.json();
 
         if (data.latestVersion && data.latestVersion !== currentVersion) {
-          Alert.alert(
-            "Update Available",
-            `A new version of this app is available "Version ${data.latestVersion}". Please update to continue.`,
-            [{
-              text: "Update", onPress: () => {
-                Linking.openURL(PLAY_STORE_URL);
-                setTimeout(() => setVersionCheckTrigger(prev => prev + 1), 500)
-              }
-            }]
-          );
+        Alert.alert(
+          "Update Available",
+          "A new version of this app is available. Please consult your admin to determine whether the app needs updating.",
+          [
+            {
+              text: "OK"
+            }
+          ]
+        );
         }
       } catch (e) {
         console.log(e)
@@ -84,7 +83,7 @@ export default function App() {
     }
 
     versionCheck()
-  }, [versionCheckTrigger])
+  }, [])
 
   const handleRegister = async () => {
     try {

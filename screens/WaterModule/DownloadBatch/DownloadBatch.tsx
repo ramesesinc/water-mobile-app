@@ -13,6 +13,10 @@ import { SelectList } from 'react-native-dropdown-select-list'
 import { removeDownloaded } from '../Others/removeDownloaded';
 import DeviceInfo from 'react-native-device-info';
 
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
+
 const DownloadBatch = ({ navigation }) => {
   const [downloading, setDownloading] = useState(false)
   const [predownloading, setPreDownloading] = useState(false)
@@ -31,6 +35,7 @@ const DownloadBatch = ({ navigation }) => {
   const [serverObj, setServerObj] = useState(null)
 
   const [uniqueId, setUniqueId] = useState('');
+  const [registeredKey, setRegisteredKey] = useState('');
 
   const maxNum = useRef(0)
 
@@ -52,17 +57,26 @@ const DownloadBatch = ({ navigation }) => {
     const serverObjectString = await AsyncStorage.getItem('serverObject');
     const serverObjectJSON = await JSON.parse(serverObjectString);
 
+
+    const id = await DeviceInfo.getUniqueId();
+    id && setUniqueId(id)
+    const regkey = await AsyncStorage.getItem('registeredKey');
+    regkey && setRegisteredKey(registeredKey)
+
     setServerObj(serverObjectJSON)
     setReaderObj(storedObject)
 
     const res = await fetch(`http://${serverObjectJSON.water.ip}:${serverObjectJSON.water.port}/osiris3/json/enterprise/WaterMobileReadingService.getBatches`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'User-Agent': `WaterMobileApp/${currentVersion}` },
       body: JSON.stringify({
         env: {
           CLIENTTYPE: 'mobile',
+          APPVERSION: currentVersion,
           USERID: storedObject.USERID,
-          SESSIONID: storedObject.SESSIONID
+          SESSIONID: storedObject.SESSIONID,
+          DEVICEID: id,
+          REGKEY: regkey
         }
       }),
     });
@@ -167,17 +181,20 @@ const DownloadBatch = ({ navigation }) => {
 
         const res = await fetch(`http://${serverObj.water.ip}:${serverObj.water.port}/osiris3/json/enterprise/WaterMobileReadingService.getBatchItems`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'User-Agent': `WaterMobileApp/${currentVersion}` },
           body: JSON.stringify({
             env: {
               CLIENTTYPE: 'mobile',
-              USERID: readerObj.USERID
+              USERID: readerObj.USERID,
+              SESSIONID: readerObj.SESSIONID,
+              DEVICEID: uniqueId,
+              REGKEY: registeredKey,
+              APPVERSION: currentVersion
             },
             args: {
               batchid: selectedBatch,
               start: currentStart.current,
-              limit: selected + 1,
-              deviceUniqueId: uniqueId
+              limit: selected + 1
             },
           }),
         });

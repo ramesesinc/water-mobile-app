@@ -15,6 +15,10 @@ import DeviceInfo from 'react-native-device-info';
 
 const etracslogo = require('../../assets/etracsLogo.png')
 
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
+
 // 557a4295dcca1a044b690f8b6486f33d
 
 export default function Login({ navigation }) {
@@ -30,6 +34,7 @@ export default function Login({ navigation }) {
     const [etracsPort, setEtracsPort] = useState("")
 
     const [uniqueId, setUniqueId] = useState('');
+    const [registeredKey, setRegisteredKey] = useState('');
 
     const handleUserChange = (inputText) => {
         setUserName(inputText)
@@ -54,6 +59,19 @@ export default function Login({ navigation }) {
         }
 
         getReaderInfo();
+
+        const getRegisteredKey = async () => {
+            try {
+                const regkey = await AsyncStorage.getItem('registeredKey');
+                console.log(regkey, currentVersion)
+                regkey && setRegisteredKey(registeredKey)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        getRegisteredKey();
+
     }, [])
 
     useEffect(() => {
@@ -120,15 +138,17 @@ export default function Login({ navigation }) {
         try {
             const res = await fetch(`http://${etracsIP}:${etracsPort}/osiris3/json/etracs25/LoginService.login`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json', 'User-Agent': `WaterMobileApp/${currentVersion}` },
                 body: JSON.stringify({
                     env: {
                         CLIENTTYPE: 'mobile',
+                        DEVICEID: uniqueId,
+                        REGKEY: registeredKey,
+                        APPVERSION: currentVersion
                     },
                     args: {
                         username: username,
-                        password: hash,
-                        deviceUniqueId: uniqueId
+                        password: hash
                     },
                 }),
                 signal: controller.signal,

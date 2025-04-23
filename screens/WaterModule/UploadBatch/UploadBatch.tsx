@@ -8,6 +8,10 @@ import WaterHeader from '../../../components/Water/WaterHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DeviceInfo from 'react-native-device-info';
 
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
+
 const UploadBatch = ({ navigation }) => {
   const [uploading, setUploading] = useState(false)
   const [completed, setCompleted] = useState(false);
@@ -20,8 +24,10 @@ const UploadBatch = ({ navigation }) => {
   const [serverObj, setServerObj] = useState(null)
 
   const [uniqueId, setUniqueId] = useState('');
+  const [registeredKey, setRegisteredKey] = useState('');
 
   const db = SQLITE.openDatabase('example.db');
+  
   useEffect(() => {
     navigation.setParams({ tabBarVisible: !uploading });
   }, [uploading]);
@@ -42,6 +48,8 @@ const UploadBatch = ({ navigation }) => {
       try {
         const id = await DeviceInfo.getUniqueId();
         id && setUniqueId(id)
+        const regkey = await AsyncStorage.getItem('registeredKey');
+        regkey && setRegisteredKey(registeredKey)
       } catch (e) {
         alert(e)
       }
@@ -87,7 +95,10 @@ const UploadBatch = ({ navigation }) => {
                   env: {
                     CLIENTTYPE: "mobile",
                     USERID: readerObj.USERID,
-                    SESSIONID: readerObj.SESSIONID
+                    SESSIONID: readerObj.SESSIONID,
+                    DEVICEID: uniqueId,
+                    REGKEY: registeredKey,
+                    APPVERSION: currentVersion
                   },
                   args: { items: finalList }
                 })
