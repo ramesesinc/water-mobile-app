@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Modal } from 'react-native'
+import { View, Text, Pressable, Modal, KeyboardAvoidingView } from 'react-native'
 import { MaterialCommunityIcons, FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 
 
@@ -7,9 +7,13 @@ import WaterHeader from '../../../components/Water/WaterHeader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SQLITE from 'expo-sqlite'
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { useIsFocused } from '@react-navigation/native';
+
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
 
 const WaterSettings = ({ navigation }) => {
   const db = SQLITE.openDatabase('example.db');
@@ -238,6 +242,9 @@ const WaterSettings = ({ navigation }) => {
           <Text style={styles.optionsText}>Logout</Text>
         </TouchableOpacity>
       </View>
+      <KeyboardAvoidingView behavior="height" style={{ height: 50, backgroundColor: 'white' }}>
+                      <Text style={{ color: 'black', textAlign: 'center', alignSelf: 'center', flex: 1 }}>Version {currentVersion}</Text>
+                  </KeyboardAvoidingView>
     </View>
   )
 }

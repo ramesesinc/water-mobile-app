@@ -6,6 +6,10 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { styles } from './styles';
 import WaterHeader from '../../../components/Water/WaterHeader';
 
+import Constants from "expo-constants";
+
+const currentVersion = Constants.expoConfig.version
+
 export default function LoginServerSettings({ navigation }) {
     const [etracsIP, setEtracsIP] = useState("")
     const [etracsPort, setEtracsPort] = useState("")
@@ -141,6 +145,9 @@ export default function LoginServerSettings({ navigation }) {
                     </View>
                 </View>
             </View>
+            <KeyboardAvoidingView behavior="height" style={{ height: 50, backgroundColor: 'white' }}>
+                <Text style={{ color: 'black', textAlign: 'center', alignSelf: 'center', flex: 1 }}>Version {currentVersion}</Text>
+            </KeyboardAvoidingView>
         </KeyboardAvoidingView>
     )
 }

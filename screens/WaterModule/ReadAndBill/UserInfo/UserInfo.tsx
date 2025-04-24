@@ -142,6 +142,8 @@ const UserInfo = ({ navigation, route }) => {
         }
 
         getDeviceUniqueId();
+
+        console.log(height)
     }, [])
 
     useEffect(() => {
@@ -255,8 +257,10 @@ const UserInfo = ({ navigation, route }) => {
     let styles = null
 
     if (height < 600) {
+        console.log("styles1 will be used")
         styles = styles1
     } else if (height > 600 && height < 1000) {
+        console.log("styles2 will be used")
         styles = styles2
     }
 
@@ -650,8 +654,8 @@ const UserInfo = ({ navigation, route }) => {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <WaterHeader navigation={navigation} backBut="Batch Info" data={{ batchname }} />
-            <View style={styles1.container}>
-                <View style={{ flex: 1, marginBottom: 0, marginTop: 10 }}>
+            <View style={styles.container}>
+                <View style={styles.noteAndInfoGap1}>
                     <View style={{ flex: 1, flexDirection: 'row', marginBottom: 10 }}>
                         <View style={{ flex: 3, alignItems: 'center' }}>
                             <View style={{ flex: 1, justifyContent: 'space-between' }}>
@@ -671,15 +675,15 @@ const UserInfo = ({ navigation, route }) => {
                                             {
                                                 !user.note ?
                                                     <View style={{ justifyContent: 'space-between', gap: 10 }}>
-                                                        <TouchableOpacity onPress={() => setNoteOpen(true)} style={styles1.hold}>
+                                                        <TouchableOpacity onPress={() => setNoteOpen(true)} style={styles.hold}>
                                                             <Text style={{ color: 'black', fontSize: 17 }}>Hold</Text>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity onPress={() => setOpen(true)} style={styles1.print}>
+                                                        <TouchableOpacity onPress={() => setOpen(true)} style={styles.print}>
                                                             <Text style={{ color: 'white', fontSize: 17 }}>Read</Text>
                                                         </TouchableOpacity>
                                                     </View>
                                                     :
-                                                    <TouchableOpacity onPress={unHold} style={styles1.hold}>
+                                                    <TouchableOpacity onPress={unHold} style={styles.hold}>
                                                         <Text style={{ color: 'black', fontSize: 17 }}>Un-hold</Text>
                                                     </TouchableOpacity>
                                             }
@@ -690,30 +694,30 @@ const UserInfo = ({ navigation, route }) => {
                                                 !user.rate ?
                                                     <View style={{ justifyContent: 'flex-end' }}>
                                                         {!user.note ? <View style={{ justifyContent: 'space-between', gap: 10 }}>
-                                                            <TouchableOpacity onPress={() => setNoteOpen(true)} style={styles1.hold}>
+                                                            <TouchableOpacity onPress={() => setNoteOpen(true)} style={styles.hold}>
                                                                 <Text style={{ color: 'black', fontSize: 17 }}>Hold</Text>
                                                             </TouchableOpacity>
                                                             <TouchableOpacity onPress={() => {
                                                                 setOpen(true)
-                                                            }} style={styles1.reRead}>
+                                                            }} style={styles.reRead}>
                                                                 <Text style={{ color: 'black', fontSize: 17 }}>Re-read</Text>
                                                             </TouchableOpacity>
-                                                            <TouchableOpacity onPress={getRate} style={styles1.print}>
+                                                            <TouchableOpacity onPress={getRate} style={styles.print}>
                                                                 <Text style={{ color: 'white', fontSize: 17 }}>Print</Text>
                                                             </TouchableOpacity>
                                                         </View> :
                                                             <View style={{ justifyContent: 'space-between', gap: 10 }}>
-                                                                <TouchableOpacity onPress={unHold} style={styles1.hold}>
+                                                                <TouchableOpacity onPress={unHold} style={styles.hold}>
                                                                     <Text style={{ color: 'black', fontSize: 17 }}>Un-hold</Text>
                                                                 </TouchableOpacity>
-                                                                <TouchableOpacity onPress={() => setOpen(true)} style={styles1.reRead}>
+                                                                <TouchableOpacity onPress={() => setOpen(true)} style={styles.reRead}>
                                                                     <Text style={{ color: 'black', fontSize: 17 }}>Re-read</Text>
                                                                 </TouchableOpacity>
                                                             </View>
                                                         }
                                                     </View> :
                                                     <View style={{ justifyContent: 'flex-end' }}>
-                                                        <TouchableOpacity onPress={getRate} style={styles1.print}>
+                                                        <TouchableOpacity onPress={getRate} style={styles.print}>
                                                             <Text style={{ color: 'white', fontSize: 17 }}>Print</Text>
                                                         </TouchableOpacity>
                                                     </View>
@@ -726,55 +730,55 @@ const UserInfo = ({ navigation, route }) => {
                         </View>
                         <View style={{ flex: 6, alignItems: 'center', flexWrap: 'wrap' }}>
                             <View style={{ justifyContent: 'space-between', flex: 1 }}>
-                                <View style={styles1.infoGap}>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Account No:</Text>
-                                        <Text style={styles1.infoValue}>{user.acctno}</Text>
+                                <View style={styles.infoGap}>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Account No:</Text>
+                                        <Text style={styles.infoValue}>{user.acctno}</Text>
                                     </View>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Name:</Text>
-                                        <Text style={styles1.infoValue}>{user.acctname}</Text>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Name:</Text>
+                                        <Text style={styles.infoValue}>{user.acctname}</Text>
                                     </View>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Address:</Text>
-                                        <Text style={styles1.infoValue}>{user.location && user.location.replace(/\n/g, '').replace(/  +/g, ' ')}</Text>
-                                    </View>
-                                </View>
-                                <View style={styles1.infoGap}>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Meter Serial No.:</Text>
-                                        <Text style={styles1.infoValue}>{user.meterno}</Text>
-                                    </View>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Brand:</Text>
-                                        <Text style={styles1.infoValue}>{user.brand}</Text>
-                                    </View>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Capacity:</Text>
-                                        <Text style={styles1.infoValue}>{user.capacity}</Text>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Address:</Text>
+                                        <Text style={styles.infoValue}>{user.location && user.location.replace(/\n/g, '').replace(/  +/g, ' ')}</Text>
                                     </View>
                                 </View>
-                                <View style={styles1.infoGap}>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Previous Reading:</Text>
-                                        <Text style={styles1.infoValue}>{user.prevreading !== null && ensureFourDecimalPlaces(user.prevreading)}</Text>
+                                <View style={styles.infoGap}>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Meter Serial No.:</Text>
+                                        <Text style={styles.infoValue}>{user.meterno}</Text>
                                     </View>
-                                    <View style={styles1.info}>
-                                        <Text style={styles1.infoName}>Current Reading:</Text>
-                                        {user.reading === 0 ? <Text style={styles1.infoValue}>None</Text> :
-                                            <Text style={styles1.infoValue}>{user.reading && ensureFourDecimalPlaces(user.reading)}</Text>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Brand:</Text>
+                                        <Text style={styles.infoValue}>{user.brand}</Text>
+                                    </View>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Capacity:</Text>
+                                        <Text style={styles.infoValue}>{user.capacity}</Text>
+                                    </View>
+                                </View>
+                                <View style={styles.infoGap}>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Previous Reading:</Text>
+                                        <Text style={styles.infoValue}>{user.prevreading !== null && ensureFourDecimalPlaces(user.prevreading)}</Text>
+                                    </View>
+                                    <View style={styles.info}>
+                                        <Text style={styles.infoName}>Current Reading:</Text>
+                                        {user.reading === 0 ? <Text style={styles.infoValue}>None</Text> :
+                                            <Text style={styles.infoValue}>{user.reading && ensureFourDecimalPlaces(user.reading)}</Text>
                                         }
                                     </View>
                                     {user.reading !== null &&
-                                        <View style={styles1.info}>
-                                            <Text style={styles1.infoName}>Volume:</Text>
-                                            <Text style={styles1.infoValue}>{user.volume && ensureFourDecimalPlaces(user.volume)}</Text>
+                                        <View style={styles.info}>
+                                            <Text style={styles.infoName}>Volume:</Text>
+                                            <Text style={styles.infoValue}>{user.volume && ensureFourDecimalPlaces(user.volume)}</Text>
                                         </View>
                                     }
                                     {user.rate !== null &&
-                                        <View style={styles1.info}>
-                                            <Text style={styles1.infoName}>Rate:</Text>
-                                            <Text style={styles1.infoValue}>{user.rate ? currencyFormat({ val: user.rate, decimal: 2 }) : ""}</Text>
+                                        <View style={styles.info}>
+                                            <Text style={styles.infoName}>Rate:</Text>
+                                            <Text style={styles.infoValue}>{user.rate ? currencyFormat({ val: user.rate, decimal: 2 }) : ""}</Text>
                                         </View>
                                     }
                                 </View>
@@ -786,8 +790,8 @@ const UserInfo = ({ navigation, route }) => {
                     {/* Button will change depending if has been read or not */}
                     {open &&
                         <Modal transparent={true} onRequestClose={() => setOpen(false)}>
-                            <View style={styles1.modalContainer}>
-                                <View style={styles1.modal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.modal}>
                                     {/* <View style={styles1.inputContainer}>
                                         <OtpTextInput
                                             otp={otp}
@@ -798,10 +802,10 @@ const UserInfo = ({ navigation, route }) => {
                                             focusedStyle={{ borderColor: 'black', borderBottomWidth: 2 }}
                                         />
                                     </View> */}
-                                    <View style={styles1.inputContainer}>
+                                    <View style={styles.inputContainer}>
                                         {numberValue.map((value, index) => (
                                             <TextInput
-                                                style={styles1.inputBox}
+                                                style={styles.inputBox}
                                                 value={value}
                                                 key={index}
                                                 onChangeText={(text) => handleInputChange(text, index)}
@@ -824,10 +828,10 @@ const UserInfo = ({ navigation, route }) => {
                                             />
                                         ))}
                                     </View>
-                                    <View style={styles1.inputContainer}>
+                                    <View style={styles.inputContainer}>
                                         {decimalValue.map((value, index) => (
                                             <TextInput
-                                                style={styles1.decimalBox}
+                                                style={styles.decimalBox}
                                                 value={value}
                                                 key={index}
                                                 onChangeText={(text) => handleDecimalChange(text, index)}
@@ -851,10 +855,10 @@ const UserInfo = ({ navigation, route }) => {
                                         ))}
                                     </View>
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 30 }}>
-                                        <TouchableOpacity onPress={() => setOpen(false)} style={{ ...styles1.save, backgroundColor: 'white' }}>
+                                        <TouchableOpacity onPress={() => setOpen(false)} style={{ ...styles.save, backgroundColor: 'white' }}>
                                             <Text style={{ color: 'black' }}>Back</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={handleSave} style={styles1.save}>
+                                        <TouchableOpacity onPress={handleSave} style={styles.save}>
                                             <Text style={{ color: 'white' }}>Save</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -864,8 +868,8 @@ const UserInfo = ({ navigation, route }) => {
                     }
                     {sigOpen &&
                         <Modal transparent={true} onRequestClose={() => setSigOpen(false)}>
-                            <View style={styles1.modalContainer}>
-                                <View style={styles1.signModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.signModal}>
                                     <Text>Please enter name of the receiver.</Text>
                                     <TextInput placeholder='Name of Receiver' value={receiver} onChangeText={(text) => setReceiver(text)} style={{ borderWidth: 1, padding: 5 }} />
                                     {/* <Signature
@@ -902,8 +906,8 @@ const UserInfo = ({ navigation, route }) => {
                     }
                     {rateOpenOk &&
                         <Modal transparent={true} onRequestClose={() => setSigOpen(false)}>
-                            <View style={styles1.modalContainer}>
-                                <View style={styles1.rateModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.rateModal}>
                                     <View style={{ flex: 1 }}>
                                         <View style={{ justifyContent: 'space-between', flexDirection: 'row' }}>
                                             <Text>Due Date</Text>
@@ -951,8 +955,8 @@ const UserInfo = ({ navigation, route }) => {
                     }
                     {noteOpen &&
                         <Modal transparent={true} onRequestClose={() => setOpen(false)}>
-                            <View style={styles1.modalContainer}>
-                                <View style={styles1.noteModal}>
+                            <View style={styles.modalContainer}>
+                                <View style={styles.noteModal}>
                                     <View style={{ gap: 10 }}>
                                         {!edit && <Text style={{ alignSelf: 'center' }}>Hold the account</Text>}
                                         <Text>{edit ? "Edit note:" : "Put a note:"}</Text>
@@ -967,10 +971,10 @@ const UserInfo = ({ navigation, route }) => {
                                     </View>
 
                                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 10, marginTop: 10 }}>
-                                        <TouchableOpacity onPress={() => setNoteOpen(false)} style={{ ...styles1.save, backgroundColor: 'white', width: 100 }}>
+                                        <TouchableOpacity onPress={() => setNoteOpen(false)} style={{ ...styles.save, backgroundColor: 'white', width: 100 }}>
                                             <Text style={{ color: 'black' }}>Cancel</Text>
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={saveNote} style={{ ...styles1.save, width: 100 }}>
+                                        <TouchableOpacity onPress={saveNote} style={{ ...styles.save, width: 100 }}>
                                             <Text style={{ color: 'white' }}>Save</Text>
                                         </TouchableOpacity>
                                     </View>
@@ -979,7 +983,7 @@ const UserInfo = ({ navigation, route }) => {
                         </Modal>
                     }
                 </View>
-                <View style={{ gap: 10, height: 80, paddingHorizontal: 20 }}>
+                <View style={styles.noteAndInfoGap2}>
                     {user.note &&
                         <View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, justifyContent: 'center' }}>

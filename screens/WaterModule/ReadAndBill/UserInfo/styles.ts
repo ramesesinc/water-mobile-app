@@ -142,13 +142,23 @@ export const styles1 = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         borderRadius: 10,
+    },
+    noteAndInfoGap1: {
+        flex: 1,
+        marginBottom: 0,
+        marginTop: 10
+    },
+    noteAndInfoGap2: {
+        gap: 10,
+        height: 80,
+        paddingHorizontal: 20
     }
 })
 
 export const styles2 = StyleSheet.create({
     container: {
-        height: 600,
-        padding: 10,
+        flex: 1,
+        padding: 15,
         backgroundColor: 'white'
     },
     backToList: {
@@ -168,7 +178,7 @@ export const styles2 = StyleSheet.create({
         bottom: 0,
         backgroundColor: "white",
         padding: 10,
-        marginBottom: 40,
+        marginBottom: 30,
         width: 150,
         alignSelf: 'center',
         alignItems: 'center',
@@ -178,24 +188,20 @@ export const styles2 = StyleSheet.create({
     },
     info: {
         flexDirection: 'row',
-        gap: 20,
+        gap: 0,
         flexWrap: 'wrap',
-        fontSize: 20,
-        alignItems: 'center',
         justifyContent: 'space-between'
     },
     infoGap: {
-        gap: 10
+        gap: 15
     },
     infoName: {
         fontWeight: '700',
-        fontSize: 15
+        fontSize: 15,
     },
     infoValue: {
-        backgroundColor: 'red',
-        flex: 1,
         fontSize: 15,
-        textAlign: 'right'
+        textAlign: 'left'
     },
     print: {
         backgroundColor: "green",
@@ -205,8 +211,7 @@ export const styles2 = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: 'grey',
-        fontSize: 20
+        borderColor: 'grey'
     },
     modalContainer: {
         flex: 1,
@@ -219,8 +224,7 @@ export const styles2 = StyleSheet.create({
         height: 250,
         padding: 20,
         borderRadius: 20,
-        justifyContent: 'space-around',
-        gap: 20
+        justifyContent: 'space-around'
     },
     noteModal: {
         backgroundColor: 'white',
@@ -231,10 +235,27 @@ export const styles2 = StyleSheet.create({
         justifyContent: 'space-around',
         gap: 20
     },
+    rateModal: {
+        backgroundColor: 'white',
+        height: 250,
+        width: 250,
+        padding: 20,
+        borderRadius: 20,
+        gap: 20
+    },
+    signModal: {
+        backgroundColor: 'white',
+        height: 200,
+        width: 250,
+        padding: 20,
+        borderRadius: 20,
+        justifyContent: 'space-around',
+        gap: 20
+    },
     save: {
         backgroundColor: "green",
         padding: 10,
-        width: 100,
+        width: 150,
         alignSelf: 'center',
         alignItems: 'center',
         borderRadius: 10,
@@ -249,7 +270,7 @@ export const styles2 = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: 'grey',
+        borderColor: 'grey'
     },
     inputContainer: {
         flexDirection: 'row',
@@ -258,7 +279,6 @@ export const styles2 = StyleSheet.create({
     },
     inputBox: {
         borderWidth: 1,
-        borderColor: 'gray',
         padding: 10,
         paddingHorizontal: 15,
         fontWeight: 'bold',
@@ -266,9 +286,8 @@ export const styles2 = StyleSheet.create({
     },
     decimalBox: {
         borderWidth: 1,
-        borderColor: 'gray',
-        padding: 5,
-        paddingHorizontal: 10,
+        padding: 10,
+        paddingHorizontal: 15,
         fontWeight: 'bold',
         fontSize: 15
     },
@@ -278,6 +297,17 @@ export const styles2 = StyleSheet.create({
         width: 100,
         alignSelf: 'center',
         alignItems: 'center',
-        borderRadius: 10
+        borderRadius: 10,
+    },
+    noteAndInfoGap1: {
+        flex: 3,
+        marginBottom: 0,
+        marginTop: 10
+    },
+    noteAndInfoGap2: {
+        gap: 10,
+        height: 80,
+        paddingHorizontal: 20,
+        flex: 1
     }
 })
