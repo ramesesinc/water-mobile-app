@@ -69,12 +69,13 @@ const DownloadBatch = ({ navigation }) => {
     const res = await fetch(`http://${serverObjectJSON.water.ip}:${serverObjectJSON.water.port}/osiris3/json/enterprise/WaterMobileReadingService.getBatches`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'User-Agent': `WaterMobileApp/${currentVersion}` },
+      cache: 'no-store',
       body: JSON.stringify({
         env: {
           CLIENTTYPE: 'mobile',
           APPVERSION: currentVersion,
           USERID: storedObject.USERID,
-          SESSIONID: storedObject.SESSIONID,
+          SESSIONID: storedObject.env.SESSIONID,
           DEVICEID: id,
           REGKEY: regkey
         }
@@ -99,18 +100,18 @@ const DownloadBatch = ({ navigation }) => {
     getBatch();
   }, [])
 
-  useEffect(() => {
-    const getDeviceUniqueId = async () => {
-      try {
-        const id = await DeviceInfo.getUniqueId();
-        id && setUniqueId(id)
-      } catch (e) {
-        alert(e)
-      }
-    }
+  // useEffect(() => {
+  //   const getDeviceUniqueId = async () => {
+  //     try {
+  //       const id = await DeviceInfo.getUniqueId();
+  //       id && setUniqueId(id)
+  //     } catch (e) {
+  //       alert(e)
+  //     }
+  //   }
 
-    getDeviceUniqueId();
-  }, [])
+  //   getDeviceUniqueId();
+  // }, [])
 
   useEffect(() => {
     exited.current = false
@@ -182,14 +183,15 @@ const DownloadBatch = ({ navigation }) => {
         const res = await fetch(`http://${serverObj.water.ip}:${serverObj.water.port}/osiris3/json/enterprise/WaterMobileReadingService.getBatchItems`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'User-Agent': `WaterMobileApp/${currentVersion}` },
+          cache: 'no-store',
           body: JSON.stringify({
             env: {
               CLIENTTYPE: 'mobile',
               USERID: readerObj.USERID,
-              SESSIONID: readerObj.SESSIONID,
+              SESSIONID: readerObj.env.SESSIONID,
               DEVICEID: uniqueId,
               REGKEY: registeredKey,
-              APPVERSION: currentVersion
+              APPVERSION: currentVersion,
             },
             args: {
               batchid: selectedBatch,

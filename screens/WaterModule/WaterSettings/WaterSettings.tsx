@@ -11,6 +11,8 @@ import React, { useEffect, useState } from 'react';
 import CryptoJS from 'crypto-js';
 import { useIsFocused } from '@react-navigation/native';
 
+import DeviceInfo from 'react-native-device-info';
+
 import Constants from "expo-constants";
 
 const currentVersion = Constants.expoConfig.version
@@ -24,6 +26,9 @@ const WaterSettings = ({ navigation }) => {
 
   const [etracsIP, setEtracsIP] = useState("")
   const [etracsPort, setEtracsPort] = useState("")
+
+  const [uniqueId, setUniqueId] = useState('');
+  const [registeredKey, setRegisteredKey] = useState('');
 
   const isFocused = useIsFocused()
   const controller = new AbortController();
@@ -50,6 +55,21 @@ const WaterSettings = ({ navigation }) => {
       getServerAdd();
     }
   }, [isFocused])
+
+  useEffect(() => {
+    const getDeviceUniqueId = async () => {
+      try {
+        const id = await DeviceInfo.getUniqueId();
+        id && setUniqueId(id)
+        const regkey = await AsyncStorage.getItem('registeredKey');
+        regkey && setRegisteredKey(registeredKey)
+      } catch (e) {
+        alert(e)
+      }
+    }
+
+    getDeviceUniqueId();
+  }, [])
 
   function generateHmacMD5(seed: string, v: string) {
     const hmac = CryptoJS.HmacMD5(v, seed);
@@ -90,12 +110,20 @@ const WaterSettings = ({ navigation }) => {
         const lowercasedUsername = "sa".toLowerCase().toString()
         const hash = await generateHmacMD5(lowercasedUsername, adminPassword);
 
+        const storedString = await AsyncStorage.getItem('readerInfo');
+        const readerObj = await JSON.parse(storedString);
+
         const res = await fetch(`http://${etracsIP}:${etracsPort}/osiris3/json/etracs25/LoginService.login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             env: {
-              CLIENTTYPE: 'mobile',
+              CLIENTTYPE: "mobile",
+              USERID: readerObj.USERID,
+              SESSIONID: readerObj.env.SESSIONID,
+              DEVICEID: uniqueId,
+              REGKEY: registeredKey,
+              APPVERSION: currentVersion
             },
             args: {
               username: "sa",
@@ -243,8 +271,8 @@ const WaterSettings = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <KeyboardAvoidingView behavior="height" style={{ height: 50, backgroundColor: 'white' }}>
-                      <Text style={{ color: 'black', textAlign: 'center', alignSelf: 'center', flex: 1 }}>Version {currentVersion}</Text>
-                  </KeyboardAvoidingView>
+        <Text style={{ color: 'black', textAlign: 'center', alignSelf: 'center', flex: 1 }}>Version {currentVersion}</Text>
+      </KeyboardAvoidingView>
     </View>
   )
 }

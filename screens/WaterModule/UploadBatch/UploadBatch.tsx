@@ -95,7 +95,7 @@ const UploadBatch = ({ navigation }) => {
                   env: {
                     CLIENTTYPE: "mobile",
                     USERID: readerObj.USERID,
-                    SESSIONID: readerObj.SESSIONID,
+                    SESSIONID: readerObj.env.SESSIONID,
                     DEVICEID: uniqueId,
                     REGKEY: registeredKey,
                     APPVERSION: currentVersion
