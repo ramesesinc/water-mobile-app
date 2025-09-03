@@ -2,7 +2,7 @@
   "expo": {
     "name": "Etracs Water",
     "slug": "etracs-water",
-    "version": "1.0.7",
+    "version": "1.0.9",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "versionCode": 10,
+      "versionCode": 12,
       "package": "com.ramesesdevapps.etracswater"
     },
     "web": {

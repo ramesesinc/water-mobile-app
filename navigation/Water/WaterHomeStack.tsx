@@ -25,7 +25,7 @@ const WaterHomeStack = ({navigation}) => {
     <Stack.Navigator initialRouteName="Water Home">
         <Stack.Screen name="Water Home" component={WaterHome} options={{headerShown: false}} />
         <Stack.Screen name="Download Batch" component={DownloadBatch} options={{headerShown: false}} />
-        <Stack.Screen name="Upload Batch" component={UploadBatch} options={{headerShown: false}} />
+        <Stack.Screen name="Upload Data" component={UploadBatch} options={{headerShown: false}} />
         <Stack.Screen name="Read & Bill" component={ReadAndBill} options={{headerShown: false}} />
         <Stack.Screen name="User Info" component={UserInfo} options={{headerShown: false}} />
         <Stack.Screen name="Batch Info" component={BatchInfo} options={{headerShown: false}} />

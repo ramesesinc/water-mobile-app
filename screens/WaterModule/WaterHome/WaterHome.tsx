@@ -1,5 +1,5 @@
-import { View, Text, FlatList, Pressable, Alert, TouchableOpacity, ActivityIndicator } from 'react-native'
-import { Ionicons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
 
 import { styles } from './styles'
 import WaterHeader from '../../../components/Water/WaterHeader';
@@ -10,7 +10,7 @@ import { useIsFocused } from '@react-navigation/native';
 const WaterHome = ({ navigation }) => {
   const menu = [
     { name: 'Download Batch', icon: <Ionicons style={styles.iconStyle} name="download-sharp" size={60} color="#00669B" /> },
-    { name: 'Upload Batch', icon: <Ionicons style={styles.iconStyle} name="cloud-upload-sharp" size={60} color="#00669B" /> },
+    { name: 'Upload Data', icon: <Ionicons style={styles.iconStyle} name="cloud-upload-sharp" size={60} color="#00669B" /> },
     { name: 'Read & Bill', icon: <Ionicons style={styles.iconStyle} name="reader" size={60} color="#00669B" /> }
   ]
 
@@ -68,23 +68,6 @@ const WaterHome = ({ navigation }) => {
       alert(`Something went wrong, please make sure that the Water Ip address and Port is correct.`)
     } finally {
       setLoading(false)
-    }
-  }
-
-  const handleNav = (name: string) => {
-
-    if (name !== "Read & Bill" && name !== "Sync Formula" && name !== "Download Batch") {
-      navigation.navigate(name)
-    } else if (name === "Read & Bill" && !formula) {
-      // alert("Please sync the bill formula in the settings first!");
-      // Alert.alert("Can't open Read & Bill", "Please sync the bill formula in the settings first!",[], {cancelable: true, onDismiss: () => navigation.navigate("Settings")})
-      alert("Please sync the bill formula first!")
-    } else if (name === "Download Batch" && !formula) {
-      alert("Please sync the bill formula first!")
-    } else if (name === "Sync Formula") {
-      handleSync()
-    } else {
-      navigation.navigate(name)
     }
   }
 

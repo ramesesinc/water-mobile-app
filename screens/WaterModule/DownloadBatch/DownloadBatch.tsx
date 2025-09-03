@@ -10,7 +10,6 @@ import * as SQLITE from 'expo-sqlite'
 import React from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { SelectList } from 'react-native-dropdown-select-list'
-import { removeDownloaded } from '../Others/removeDownloaded';
 import DeviceInfo from 'react-native-device-info';
 
 import Constants from "expo-constants";
@@ -100,31 +99,12 @@ const DownloadBatch = ({ navigation }) => {
     getBatch();
   }, [])
 
-  // useEffect(() => {
-  //   const getDeviceUniqueId = async () => {
-  //     try {
-  //       const id = await DeviceInfo.getUniqueId();
-  //       id && setUniqueId(id)
-  //     } catch (e) {
-  //       alert(e)
-  //     }
-  //   }
-
-  //   getDeviceUniqueId();
-  // }, [])
-
   useEffect(() => {
     exited.current = false
     const unsubscribe = AppState.addEventListener('change', async (nextAppState) => {
       if (nextAppState === 'background' || nextAppState === 'inactive') {
         exited.current = true
         console.log("current", currentStart.current, currentBatch.current, batchDownloading.current)
-        // if (currentStart.current !== null && currentBatch.current !== null && batchDownloading.current === true) {
-        //   removeDownloaded(currentStart.current, currentBatch.current, "eventListener")
-
-        //   navigation.navigate("Water Home");
-        //   batchDownloading.current = false
-        // }
       }
     });
 
@@ -168,17 +148,6 @@ const DownloadBatch = ({ navigation }) => {
       try {
         batchDownloading.current = true
         setPreDownloading(true)
-        // console.log("getData function run")
-
-        // prevStart.current = currentStart.current
-
-        // const readerInfo = await AsyncStorage.getItem('readerInfo');
-        // const storedObject = await JSON.parse(readerInfo);
-
-        // const serverObjectString = await AsyncStorage.getItem('serverObject');
-        // const serverObjectJSON = await JSON.parse(serverObjectString);
-
-        // console.log(`start is : ${currentStart.current}, limit is : ${selected + 1}`)
 
         const res = await fetch(`http://${serverObj.water.ip}:${serverObj.water.port}/osiris3/json/enterprise/WaterMobileReadingService.getBatchItems`, {
           method: 'POST',
@@ -281,12 +250,6 @@ const DownloadBatch = ({ navigation }) => {
             await new Promise((res) => setTimeout(res, 50))
             if (exited.current) {
               console.log("break")
-              // console.log("prevstart:", prevStart.current)
-              // if (currentStart.current !== null && currentBatch.current !== null && batchDownloading.current === true) {
-              //   removeDownloaded(currentStart.current, currentBatch.current, "function")
-              //   console.log(exited.current)
-              //   navigation.navigate("Water Home");
-              // }
               break;
             } else {
               db.transaction(tx => {
@@ -336,27 +299,6 @@ const DownloadBatch = ({ navigation }) => {
         batchDownloading.current = false;
       }
     }
-
-    // db.transaction(tx => {
-    //   tx.executeSql(
-    //     `SELECT name FROM sqlite_master WHERE type='table' AND name=?`,
-    //     [batchTable],
-    //     (txObj, resultSet) => {
-    //       if (resultSet.rows.length > 0) {
-    //         tx.executeSql(`DROP TABLE ${batchTable}`, null, async (txObj, resultSet) => {
-    //           console.log("table dropped")
-    //         });
-    //       } else {
-    //         console.log(`Table ${batchTable} does not exist.`);
-    //       }
-    //       currentStart.current = 0
-    //     },
-    //     (txObj, error) => {
-    //       console.log("Error checking for table existence:", error);
-    //       return false
-    //     }
-    //   );
-    // });
 
     await new Promise((res) => setTimeout(res, 100))
     await getdata();

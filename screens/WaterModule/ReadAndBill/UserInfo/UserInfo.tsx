@@ -613,20 +613,6 @@ const UserInfo = ({ navigation, route }) => {
         }
     }
 
-    // const printReceiptWithSig = async () => {
-    //     try {
-    //         await ThermalPrinterModule.printBluetooth({
-    //             payload: printFormat(user, headers, imageUrl, user.sigData ? user.sigData : signatureData, user.receiver ? user.receiver : receiver, user.rate > 0 ? user.rate : computedRef.current.rate, user.qrcode ? user.qrcode : computedRef.current.qrcode, user.disconnectiondate ? user.disconnectiondate : computedRef.current.disconnectiondate),
-    //             printerWidthMM: 48,
-    //             printerNbrCharactersPerLine: 32
-    //         })
-
-    //     } catch (err) {
-    //         //error handling
-    //         alert(err)
-    //         console.log(err.message);
-    //     }
-    // };
 
     const printReceipt = async () => {
         // console.log(`userBal: ${user.balance}`)
@@ -792,16 +778,6 @@ const UserInfo = ({ navigation, route }) => {
                         <Modal transparent={true} onRequestClose={() => setOpen(false)}>
                             <View style={styles.modalContainer}>
                                 <View style={styles.modal}>
-                                    {/* <View style={styles1.inputContainer}>
-                                        <OtpTextInput
-                                            otp={otp}
-                                            setOtp={setOtp}
-                                            digits={5}
-                                            style={{ height: 20 }}
-                                            fontStyle={{ fontSize: 20, fontWeight: 'bold' }}
-                                            focusedStyle={{ borderColor: 'black', borderBottomWidth: 2 }}
-                                        />
-                                    </View> */}
                                     <View style={styles.inputContainer}>
                                         {numberValue.map((value, index) => (
                                             <TextInput
